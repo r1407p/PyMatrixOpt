@@ -1,5 +1,5 @@
-sources = matrix.cpp
-executable = matrix.so
+sources = Matrix.cpp
+executable = Matrix.so
 CXX = g++
 CXXFLAGS = -std=c++14 -shared -fPIC `python3 -m pybind11 --includes` `python3-config --includes --ldflags`
 
