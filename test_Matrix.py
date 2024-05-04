@@ -1,0 +1,64 @@
+import pytest
+import timeit
+import Matrix
+import random
+
+class Test_Matrix():
+    def test_constructer(self):
+    
+        col = random.randint(1, 1000)
+        row = random.randint(1, 1000)
+        matrix = Matrix.Matrix(row, col)
+        
+        assert matrix.nrow == row
+        assert matrix.ncol == col
+        for i in range(row):
+            for j in range(col):
+                assert matrix[i, j] == 0 
+                
+    def make_matrices(self, size):
+
+        mat1 = Matrix.Matrix(size,size)
+        mat2 = Matrix.Matrix(size,size)
+        mat3 = Matrix.Matrix(size,size)
+
+        for it in range(size):
+            for jt in range(size):
+                mat1[it, jt] = it * size + jt + 1
+                mat2[it, jt] = it * size + jt + 1
+                mat3[it, jt] = 0
+
+        return mat1, mat2, mat3
+
+    def test_basic_create(self):
+        size = 100
+        mat1, _, _ = self.make_matrices(size)
+        for i in range(mat1.nrow):
+            for j in range(mat1.ncol):
+                assert i * size + j + 1 == mat1[i,j]
+
+    def test_basic(self):
+
+        size = 100
+        mat1, mat2, mat3 = self.make_matrices(size)
+
+        assert size == mat1.nrow
+        assert size == mat1.ncol
+        assert size == mat2.nrow
+        assert size == mat2.ncol
+        assert size == mat3.nrow
+        assert size == mat3.ncol
+
+        assert 2 == mat1[0,1]
+        assert size+2 == mat1[1,1]
+        assert size*2 == mat1[1,size-1]
+        assert size*size == mat1[size-1,size-1]
+
+        for i in range(mat1.nrow):
+            for j in range(mat1.ncol):
+                assert 0 != mat1[i,j]
+                assert mat1[i,j] == mat2[i,j]
+                assert 0 == mat3[i,j]
+
+        assert mat1 == mat2
+        assert mat1 is not mat2
