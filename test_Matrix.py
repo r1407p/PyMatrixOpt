@@ -16,6 +16,26 @@ class Test_Matrix():
             for j in range(col):
                 assert matrix[i, j] == 0 
                 
+    def test_multiply_correctness(self):
+        size1 = random.randint(1, 1000)
+        size2 = random.randint(1, 1000)
+        size3 = random.randint(1, 1000)
+        oriMatrix1 = Matrix.Matrix(size1, size2)
+        oriMatrix2 = Matrix.Matrix(size2, size3)
+        for i in range(size1):
+            for j in range(size2):
+                oriMatrix1[i, j] = random.randint(1, 1000)
+        for i in range(size2):
+            for j in range(size3):
+                oriMatrix2[i, j] = random.randint(1, 1000)
+        retMatrix1 = Matrix.matrix_multiply_naive(oriMatrix1, oriMatrix2)
+        retMatrix2 = Matrix.matrix_multiply_strassen(oriMatrix1, oriMatrix2)
+        retMatrix3 = Matrix.matrix_multiply_coppersmith_winograd(oriMatrix1, oriMatrix2)
+        
+        for i in range(size1):
+            for j in range(size3):
+                assert retMatrix1[i, j] == retMatrix2[i, j] == retMatrix3[i, j]
+                
     def make_matrices(self, size):
 
         mat1 = Matrix.Matrix(size,size)

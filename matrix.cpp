@@ -94,7 +94,7 @@ bool Matrix::operator==(const Matrix &m){
     return true;
 }
 
-Matrix multiply_naive(Matrix const &m1, Matrix const &m2){
+Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
     if(m1.ncol() != m2.nrow()){
         throw std::invalid_argument("matrix size does not match");
     }
@@ -109,7 +109,15 @@ Matrix multiply_naive(Matrix const &m1, Matrix const &m2){
     return result;
 }
 
+// need to implement
+Matrix matrix_multiply_strassen(Matrix const &m1, Matrix const &m2){
+    
+}
 
+// need to implement
+Matrix matrix_multiply_coppersmith_winograd(Matrix const &m1, Matrix const &m2){
+    
+}
 
 PYBIND11_MODULE(Matrix, m) {
     py::class_<Matrix>(m, "Matrix")
@@ -127,5 +135,9 @@ PYBIND11_MODULE(Matrix, m) {
     .def_property_readonly("nrow", &Matrix::nrow)
     .def_property_readonly("ncol", &Matrix::ncol)
     .def("__eq__", &Matrix::operator ==);
+
+    m.def("matrix_multiply_naive", &matrix_multiply_naive, "");
+    m.def("matrix_multiply_strassen", &matrix_multiply_strassen, "");
+    m.def("matrix_multiply_coppersmith_winograd", &matrix_multiply_coppersmith_winograd, "");
 
 }
