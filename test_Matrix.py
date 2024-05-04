@@ -82,3 +82,57 @@ class Test_Matrix():
 
         assert mat1 == mat2
         assert mat1 is not mat2
+
+    def test_match_naive_strassen(self):
+        size = 100
+        mat1, mat2, _ = self.make_matrices(size)
+        ret_naive = Matrix.matrix_multiply_naive(mat1, mat2)
+        ret_strassen = Matrix.matrix_multiply_strassen(mat1, mat2)
+        assert size == ret_naive.nrow
+        assert size == ret_naive.ncol
+        assert size == ret_strassen.nrow
+        assert size == ret_strassen.ncol
+
+        for i in range(ret_naive.nrow):
+            for j in range(ret_naive.ncol):
+                assert mat1[i,j] is not ret_strassen[i,j]
+                assert ret_naive[i,j] == ret_strassen[i,j]
+
+    def test_match_naive_coppersmith_winograd(self):
+
+        size = 100
+        mat1, mat2, _ = self.make_matrices(size)
+
+        ret_naive = Matrix.matrix_multiply_naive(mat1, mat2)
+        ret_coppersmith_winograd = Matrix.matrix_multiply_coppersmith_winograd(mat1, mat2)
+
+        assert size == ret_naive.nrow
+        assert size == ret_naive.ncol
+        assert size == ret_coppersmith_winograd.nrow
+        assert size == ret_coppersmith_winograd.ncol
+
+        for i in range(ret_naive.nrow):
+            for j in range(ret_naive.ncol):
+                assert mat1[i,j] is not ret_coppersmith_winograd[i,j]
+                assert ret_naive[i,j] == ret_coppersmith_winograd[i,j]
+
+    def test_zero(self):
+        size = 100
+        mat1, mat2, mat3 = self.make_matrices(size)
+
+        ret_naive = Matrix.matrix_multiply_naive(mat1, mat3)
+        ret_strassen = Matrix.matrix_multiply_strassen(mat1, mat3)
+        ret_coppersmith_winograd = Matrix.matrix_multiply_coppersmith_winograd(mat1, mat3)
+
+        assert size == ret_naive.nrow
+        assert size == ret_naive.ncol
+        assert size == ret_strassen.nrow
+        assert size == ret_strassen.ncol
+        assert size == ret_coppersmith_winograd.nrow
+        assert size == ret_coppersmith_winograd.ncol
+        
+        for i in range(ret_naive.nrow):
+            for j in range(ret_naive.ncol):
+                assert 0 == ret_naive[i, j]
+                assert 0 == ret_strassen[i, j]
+                assert 0 == ret_coppersmith_winograd[i, j]
