@@ -1,4 +1,4 @@
-#include "matrix.hpp"
+#include "Matrix.hpp"
 #include <stdexcept>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -111,7 +111,7 @@ Matrix multiply_naive(Matrix const &m1, Matrix const &m2){
 
 
 
-PYBIND11_MODULE(_matrix, m) {
+PYBIND11_MODULE(Matrix, m) {
     py::class_<Matrix>(m, "Matrix")
     .def(py::init<>())
     .def(py::init<size_t, size_t>())
