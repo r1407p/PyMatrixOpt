@@ -23,4 +23,6 @@ public:
     double   operator() (size_t row, size_t col) const;
     double & operator() (size_t row, size_t col);
     bool operator==(const Matrix &m);  
+    Matrix operator+(const Matrix &m);
+    Matrix operator-(const Matrix &m);
 };
