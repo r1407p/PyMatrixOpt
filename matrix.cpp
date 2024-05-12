@@ -115,6 +115,15 @@ Matrix Matrix::operator-(const Matrix &m){
     return result;
 
 }
+Matrix& Matrix::operator=(const Matrix &m){
+    if(this->m_nrow != m.m_nrow || this->m_ncol != m.m_ncol){
+        throw std::invalid_argument("matrix size does not match");
+    }
+    for(size_t i = 0; i < m_nrow * m_ncol; i++){
+        this->m_buffer[i] = m.m_buffer[i];
+    }
+    return *this;
+}
 
 Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
     if(m1.ncol() != m2.nrow()){

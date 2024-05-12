@@ -25,4 +25,5 @@ public:
     bool operator==(const Matrix &m);  
     Matrix operator+(const Matrix &m);
     Matrix operator-(const Matrix &m);
-};
+    Matrix& operator=(const Matrix &m);
+};;
