@@ -204,7 +204,80 @@ Matrix matrix_multiply_strassen(Matrix const &m1, Matrix const &m2){
 
 // need to implement
 Matrix matrix_multiply_coppersmith_winograd(Matrix const &m1, Matrix const &m2){
-    
+    if(m1.ncol() != m2.nrow()){
+        throw std::invalid_argument("matrix size does not match");
+    }
+
+    //the first version, check if the matrix is square
+    if(m1.nrow() != m1.ncol() || m2.nrow() != m2.ncol()){
+        throw std::invalid_argument("matrix size does not match");
+    }
+    size_t n = m1.nrow();
+    Matrix result(n, n);
+
+    if (n == 1) {
+        result(0, 0) = m1(0, 0) * m2(0, 0);
+        return result;
+    }
+
+    if(n % 2 != 0){
+        return matrix_multiply_naive(m1, m2);
+    }
+    size_t half_n = n / 2;
+
+    Matrix a11(half_n, half_n), a12(half_n, half_n), a21(half_n, half_n), a22(half_n, half_n);
+    Matrix b11(half_n, half_n), b12(half_n, half_n), b21(half_n, half_n), b22(half_n, half_n);
+
+    for(size_t i = 0; i < half_n; i++){
+        for(size_t j = 0; j < half_n; j++){
+            a11(i, j) = m1(i, j);
+            a12(i, j) = m1(i, j + half_n);
+            a21(i, j) = m1(i + half_n, j);
+            a22(i, j) = m1(i + half_n, j + half_n);
+            b11(i, j) = m2(i, j);
+            b12(i, j) = m2(i, j + half_n);
+            b21(i, j) = m2(i + half_n, j);
+            b22(i, j) = m2(i + half_n, j + half_n);
+        }
+    }
+    Matrix S1(half_n, half_n), S2(half_n, half_n), S3(half_n, half_n), S4(half_n, half_n);
+    Matrix T1(half_n, half_n), T2(half_n, half_n), T3(half_n, half_n), T4(half_n, half_n);
+    S1 = a21 + a22;
+    S2 = S1 - a11;
+    S3 = a11 - a21;
+    S4 = a12 - S2;
+    T1 = b12 - b11;
+    T2 = b22 - T1;
+    T3 = b22 - b12;
+    T4 = T2 - b21;
+
+    Matrix M1(half_n, half_n), M2(half_n, half_n), M3(half_n, half_n), M4(half_n, half_n), M5(half_n, half_n), M6(half_n, half_n), M7(half_n, half_n);
+    Matrix U1(half_n, half_n), U2(half_n, half_n), U3(half_n, half_n), U4(half_n, half_n), U5(half_n, half_n), U6(half_n, half_n), U7(half_n, half_n);
+    M1 = matrix_multiply_coppersmith_winograd(a11, b11);
+    M2 = matrix_multiply_coppersmith_winograd(a12, b21);
+    M3 = matrix_multiply_coppersmith_winograd(S4, b22);
+    M4 = matrix_multiply_coppersmith_winograd(a22, T4);
+    M5 = matrix_multiply_coppersmith_winograd(S1, T1);
+    M6 = matrix_multiply_coppersmith_winograd(S2, T2);
+    M7 = matrix_multiply_coppersmith_winograd(S3, T3);
+
+    U1 = M1 + M2;
+    U2 = M1 + M6;
+    U3 = U2 + M7;
+    U4 = U2 + M5;
+    U5 = U4 + M3;
+    U6 = U3 - M4;
+    U7 = U3 + M5;
+
+    for (size_t i = 0; i < half_n; ++i) {
+        for (size_t j = 0; j < half_n; ++j) {
+            result(i, j) = U1(i, j);
+            result(i, j + half_n) = U5(i, j);
+            result(i + half_n, j) = U6(i, j);
+            result(i + half_n, j + half_n) = U7(i, j);
+        }
+    }
+    return result;
 }
 
 PYBIND11_MODULE(Matrix, m) {
