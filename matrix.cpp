@@ -133,7 +133,64 @@ Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
 
 // need to implement
 Matrix matrix_multiply_strassen(Matrix const &m1, Matrix const &m2){
-    
+    if(m1.ncol() != m2.nrow()){
+        throw std::invalid_argument("matrix size does not match");
+    }
+
+    //the first version, check if the matrix is square
+    if(m1.nrow() != m1.ncol() || m2.nrow() != m2.ncol()){
+        throw std::invalid_argument("matrix size does not match");
+    }
+    size_t n = m1.nrow();
+    Matrix result(n, n);
+
+    if (n == 1) {
+        result(0, 0) = m1(0, 0) * m2(0, 0);
+        return result;
+    }
+
+    if(n % 2 != 0){
+        return matrix_multiply_naive(m1, m2);
+    }
+    size_t half_n = n / 2;
+
+    Matrix a11(half_n, half_n), a12(half_n, half_n), a21(half_n, half_n), a22(half_n, half_n);
+    Matrix b11(half_n, half_n), b12(half_n, half_n), b21(half_n, half_n), b22(half_n, half_n);
+
+    for(size_t i = 0; i < half_n; i++){
+        for(size_t j = 0; j < half_n; j++){
+            a11(i, j) = m1(i, j);
+            a12(i, j) = m1(i, j + half_n);
+            a21(i, j) = m1(i + half_n, j);
+            a22(i, j) = m1(i + half_n, j + half_n);
+            b11(i, j) = m2(i, j);
+            b12(i, j) = m2(i, j + half_n);
+            b21(i, j) = m2(i + half_n, j);
+            b22(i, j) = m2(i + half_n, j + half_n);
+        }
+    }
+
+    Matrix p1 = matrix_multiply_strassen(a11 + a22, b11 + b22);
+    Matrix p2 = matrix_multiply_strassen(a21 + a22, b11);
+    Matrix p3 = matrix_multiply_strassen(a11, b12 - b22);
+    Matrix p4 = matrix_multiply_strassen(a22, b21 - b11);
+    Matrix p5 = matrix_multiply_strassen(a11 + a12, b22);
+    Matrix p6 = matrix_multiply_strassen(a21 - a11, b11 + b12);
+    Matrix p7 = matrix_multiply_strassen(a12 - a22, b21 + b22);
+
+    Matrix c11 = p1 + p4 - p5 + p7;
+    Matrix c12 = p3 + p5;
+    Matrix c21 = p2 + p4;
+    Matrix c22 = p1 - p2 + p3 + p6;
+    for (size_t i = 0; i < half_n; ++i) {
+        for (size_t j = 0; j < half_n; ++j) {
+            result(i, j) = c11(i, j);
+            result(i, j + half_n) = c12(i, j);
+            result(i + half_n, j) = c21(i, j);
+            result(i + half_n, j + half_n) = c22(i, j);
+        }
+    }
+    return result;
 }
 
 // need to implement

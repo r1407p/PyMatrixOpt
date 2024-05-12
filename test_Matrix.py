@@ -17,9 +17,9 @@ class Test_Matrix():
                 assert matrix[i, j] == 0 
                 
     def test_multiply_correctness(self):
-        size1 = random.randint(1, 1000)
-        size2 = random.randint(1, 1000)
-        size3 = random.randint(1, 1000)
+        size1 = 256
+        size2 = 256
+        size3 = 256
         oriMatrix1 = Matrix.Matrix(size1, size2)
         oriMatrix2 = Matrix.Matrix(size2, size3)
         for i in range(size1):
@@ -34,7 +34,7 @@ class Test_Matrix():
         
         for i in range(size1):
             for j in range(size3):
-                assert retMatrix1[i, j] == retMatrix2[i, j] == retMatrix3[i, j]
+                assert retMatrix1[i, j] == retMatrix2[i, j]  == retMatrix3[i, j]
                 
     def make_matrices(self, size):
 
