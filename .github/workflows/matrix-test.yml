@@ -43,7 +43,9 @@ jobs:
         sudo contrib/install.sh everything
         pip install -r requirements.txt
 
+    - name: Build project
+      run: make
+
     - name: Run tests
       run: |
-        make 
         make test
