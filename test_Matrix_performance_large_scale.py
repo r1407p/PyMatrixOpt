@@ -5,30 +5,29 @@ import random
 
 class Test_Matrix_Performance():
     
-    def test_multiply_cache_optimization_performance(self):
-        
+    def test_multiply_performance(self):
         for i in range(12):
-            size1 = 2**i
-            size2 = 2**i
-            size3 = 2**i    
-            oriMatrix1 = Matrix.Matrix(size1, size2)
-            oriMatrix2 = Matrix.Matrix(size2, size3)
-            for i in range(size1):
-                for j in range(size2):
-                    oriMatrix1[i, j] = random.randint(1, 1000)
-            for i in range(size2):
-                for j in range(size3):
-                    oriMatrix2[i, j] = random.randint(1, 1000)
+            size = 2**i
+            repeat = 1
             
-            ns = dict(Matrix=Matrix, oriMatrix1=oriMatrix1, oriMatrix2=oriMatrix2)
-            t_naive = timeit.Timer('Matrix.matrix_multiply_naive(oriMatrix1, oriMatrix2)', globals=ns)
-            t_strassen = timeit.Timer('Matrix.matrix_multiply_strassen(oriMatrix1, oriMatrix2)', globals=ns)
-            t_coppersmith_winograd = timeit.Timer('Matrix.matrix_multiply_coppersmith_winograd(oriMatrix1, oriMatrix2)', globals=ns)
+            setup = f'''
+import Matrix
+size = {size}
+mat1 = Matrix.Matrix(size,size)
+mat2 = Matrix.Matrix(size,size)
+for it in range(size):
+    for jt in range(size):
+        mat1[it, jt] = it * size + jt + 1
+        mat2[it, jt] = it * size + jt + 1
+'''
             
+            naive = timeit.Timer('Matrix.matrix_multiply_naive(mat1, mat2)', setup=setup)
+            strassen = timeit.Timer('Matrix.matrix_multiply_strassen(mat1, mat2)', setup=setup)
+            coppersmith_winograd = timeit.Timer('Matrix.matrix_multiply_coppersmith_winograd(mat1, mat2)', setup=setup)
+
             with open("performance.txt", "a") as f:
-                f.write("Size: " + str(size1) + "\n")
-                f.write("Naive: " + str(t_naive.timeit(number=1)) + "\n")
-                f.write("Strassen: " + str(t_strassen.timeit(number=1)) + "\n")
-                f.write("Coppersmith-Winograd: " + str(t_coppersmith_winograd.timeit(number=1)) + "\n")
+                f.write("Size: " + str(size) + "\n")
+                f.write("Naive: " + str(min(naive.repeat(repeat=repeat, number=1))) + "\n")
+                f.write("Strassen: " + str(min(strassen.repeat(repeat=repeat, number=1))) + "\n")
+                f.write("Coppersmith-Winograd: " + str(min(coppersmith_winograd.repeat(repeat=repeat, number=1))) + "\n")
                 f.write("\n")
-        

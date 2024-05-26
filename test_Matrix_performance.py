@@ -8,7 +8,7 @@ class Test_Matrix_Performance():
     def test_multiply_performance_block_for_tile(self):
         i = 10
         size = 2**i
-        repeat = 1
+        repeat = 5
         
         setup = f'''
 import Matrix
