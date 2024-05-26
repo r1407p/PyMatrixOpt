@@ -1,0 +1,36 @@
+Size: 1024
+Naive: 11.442493631999241
+Cache-optimized: 2.909083048998582
+
+Block size: 4
+Tile: 3.8612847270014754
+Cache-optimized-tile: 1.8432617569997092
+
+Block size: 8
+Tile: 2.917735871000332
+Cache-optimized-tile: 2.160394099999394
+
+Block size: 12
+Tile: 3.391746939996665
+Cache-optimized-tile: 2.2407264959983877
+
+Block size: 16
+Tile: 3.5790695489995414
+Cache-optimized-tile: 2.217062274001364
+
+Block size: 20
+Tile: 3.5086053229970275
+Cache-optimized-tile: 2.230036699002085
+
+Block size: 24
+Tile: 3.48193508100303
+Cache-optimized-tile: 2.3277256280016445
+
+Block size: 28
+Tile: 3.364736407998862
+Cache-optimized-tile: 2.3628915090012015
+
+Block size: 32
+Tile: 3.2680627679983445
+Cache-optimized-tile: 2.502799567002512
+
