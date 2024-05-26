@@ -33,10 +33,11 @@ class Test_Matrix():
         retMatrix3 = Matrix.matrix_multiply_coppersmith_winograd(oriMatrix1, oriMatrix2)
         retMatrix4 = Matrix.matrix_multiply_naive_tile(oriMatrix1, oriMatrix2, 8)
         retMatrix5 = Matrix.matrix_multiply_naive_cache_optimized(oriMatrix1, oriMatrix2)
+        retMatrix6 = Matrix.matrix_multiply_naive_cache_optimized_tile(oriMatrix1, oriMatrix2, 8)
         
         for i in range(size1):
             for j in range(size3):
-                assert retMatrix1[i, j] == retMatrix2[i, j]  == retMatrix3[i, j] == retMatrix4[i, j] == retMatrix5[i, j]
+                assert retMatrix1[i, j] == retMatrix2[i, j]  == retMatrix3[i, j] == retMatrix4[i, j] == retMatrix5[i, j] == retMatrix6[i, j]
                 
     def make_matrices(self, size):
 
@@ -127,6 +128,7 @@ class Test_Matrix():
         ret_coppersmith_winograd = Matrix.matrix_multiply_coppersmith_winograd(mat1, mat3)
         ret_naive_tile = Matrix.matrix_multiply_naive_tile(mat1, mat3, 8)
         ret_naive_cache_optimized = Matrix.matrix_multiply_naive_cache_optimized(mat1, mat3)
+        ret_naive_cache_optimized_tile = Matrix.matrix_multiply_naive_cache_optimized_tile(mat1, mat3, 8)
         
         assert size == ret_naive.nrow
         assert size == ret_naive.ncol
@@ -138,7 +140,8 @@ class Test_Matrix():
         assert size == ret_naive_tile.ncol
         assert size == ret_naive_cache_optimized.nrow
         assert size == ret_naive_cache_optimized.ncol
-        
+        assert size == ret_naive_cache_optimized_tile.nrow
+        assert size == ret_naive_cache_optimized_tile.ncol
         
         
         
@@ -149,4 +152,5 @@ class Test_Matrix():
                 assert 0 == ret_coppersmith_winograd[i, j]
                 assert 0 == ret_naive_tile[i, j]
                 assert 0 == ret_naive_cache_optimized[i, j]
+                assert 0 == ret_naive_cache_optimized_tile[i, j]
         
