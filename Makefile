@@ -8,3 +8,6 @@ all: $(sources)
 
 clear:
 	rm -rf $(executable) __pycache__ .pytest* *.so
+
+test:
+	pytest test_Matrix.py
