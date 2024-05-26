@@ -1,7 +1,7 @@
 sources = Matrix.cpp
 executable = Matrix.so
-CXX = g++
-CXXFLAGS = -std=c++14 -shared -fPIC `python3 -m pybind11 --includes` `python3-config --includes --ldflags`
+CXX = clang++
+CXXFLAGS = -O3 -Wall -shared -std=c++11 -fPIC  `python3 -m pybind11 --includes` `python3-config --includes --ldflags`
 
 all: $(sources)
 	$(CXX) $(CXXFLAGS) $(shell python3 -m pybind11 --includes) $(sources) -o $(executable)
