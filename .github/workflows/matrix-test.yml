@@ -42,7 +42,7 @@ jobs:
         sudo chmod +x contrib/install.sh
         sudo contrib/install.sh everything
         pip install -r requirements.txt
-
+        pytest -V
     - name: Build project
       run: make
 
