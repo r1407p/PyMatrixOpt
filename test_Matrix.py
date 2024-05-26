@@ -31,10 +31,11 @@ class Test_Matrix():
         retMatrix1 = Matrix.matrix_multiply_naive(oriMatrix1, oriMatrix2)
         retMatrix2 = Matrix.matrix_multiply_strassen(oriMatrix1, oriMatrix2)
         retMatrix3 = Matrix.matrix_multiply_coppersmith_winograd(oriMatrix1, oriMatrix2)
+        retMatrix4 = Matrix.matrix_multiply_naive_tile(oriMatrix1, oriMatrix2, 8)
         
         for i in range(size1):
             for j in range(size3):
-                assert retMatrix1[i, j] == retMatrix2[i, j]  == retMatrix3[i, j]
+                assert retMatrix1[i, j] == retMatrix2[i, j]  == retMatrix3[i, j] == retMatrix4[i, j]
                 
     def make_matrices(self, size):
 
@@ -123,17 +124,20 @@ class Test_Matrix():
         ret_naive = Matrix.matrix_multiply_naive(mat1, mat3)
         ret_strassen = Matrix.matrix_multiply_strassen(mat1, mat3)
         ret_coppersmith_winograd = Matrix.matrix_multiply_coppersmith_winograd(mat1, mat3)
-
+        ret_naive_tile = Matrix.matrix_multiply_naive_tile(mat1, mat3, 8)
+        
         assert size == ret_naive.nrow
         assert size == ret_naive.ncol
         assert size == ret_strassen.nrow
         assert size == ret_strassen.ncol
         assert size == ret_coppersmith_winograd.nrow
         assert size == ret_coppersmith_winograd.ncol
+        assert size == ret_naive_tile.nrow
         
         for i in range(ret_naive.nrow):
             for j in range(ret_naive.ncol):
                 assert 0 == ret_naive[i, j]
                 assert 0 == ret_strassen[i, j]
                 assert 0 == ret_coppersmith_winograd[i, j]
+                assert 0 == ret_naive_tile[i, j]
         

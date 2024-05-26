@@ -140,6 +140,34 @@ Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
     return result;
 }
 
+Matrix matrix_multiply_naive_tile(Matrix const &m1, Matrix const &m2, std::size_t size){
+    if(m1.ncol() != m2.nrow()){
+        throw std::invalid_argument("matrix size does not match");
+    }
+    Matrix result(m1.nrow(), m2.ncol());
+    for(size_t i = 0; i < m1.nrow(); i += size){
+        for(size_t j = 0; j < m2.ncol(); j += size){
+            for(size_t k = 0; k < m1.ncol(); k += size){
+                for(size_t ii = i; ii < std::min(i + size, m1.nrow()); ii++){
+                    for(size_t jj = j; jj < std::min(j + size, m2.ncol()); jj++){
+                        for(size_t kk = k; kk < std::min(k + size, m1.ncol()); kk++){
+                            result(ii, jj) += m1(ii, kk) * m2(kk, jj);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+
+
+
+
+
+
+
+
 // need to implement
 Matrix matrix_multiply_strassen(Matrix const &m1, Matrix const &m2){
     if(m1.ncol() != m2.nrow()){
@@ -298,7 +326,7 @@ PYBIND11_MODULE(Matrix, m) {
     .def("__eq__", &Matrix::operator ==);
 
     m.def("matrix_multiply_naive", &matrix_multiply_naive, "");
+    m.def("matrix_multiply_naive_tile", &matrix_multiply_naive_tile, "");
     m.def("matrix_multiply_strassen", &matrix_multiply_strassen, "");
     m.def("matrix_multiply_coppersmith_winograd", &matrix_multiply_coppersmith_winograd, "");
-
 }
