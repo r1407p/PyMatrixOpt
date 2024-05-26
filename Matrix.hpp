@@ -26,4 +26,5 @@ public:
     Matrix operator+(const Matrix &m);
     Matrix operator-(const Matrix &m);
     Matrix& operator=(const Matrix &m);
+    Matrix transpose() const;
 };;

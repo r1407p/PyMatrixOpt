@@ -125,6 +125,16 @@ Matrix& Matrix::operator=(const Matrix &m){
     return *this;
 }
 
+Matrix Matrix::transpose() const {
+    Matrix transposed(m_ncol, m_nrow);
+    for (size_t i = 0; i < m_nrow; ++i) {
+        for (size_t j = 0; j < m_ncol; ++j) {
+            transposed(j, i) = (*this)(i, j);
+        }
+    }
+    return transposed;
+}
+
 Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
     if(m1.ncol() != m2.nrow()){
         throw std::invalid_argument("matrix size does not match");
