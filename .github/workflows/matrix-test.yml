@@ -41,7 +41,7 @@ jobs:
         export INSTALL_PREFIX=/usr
         sudo chmod +x contrib/install.sh
         sudo contrib/install.sh everything
-
+        pip install pytest
     - name: Run tests
       run: |
         pytest test_Matrix.py
