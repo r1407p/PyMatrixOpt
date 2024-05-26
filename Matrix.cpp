@@ -149,7 +149,6 @@ Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
     }
     return result;
 }
-
 Matrix matrix_multiply_naive_tile(Matrix const &m1, Matrix const &m2, std::size_t size){
     if(m1.ncol() != m2.nrow()){
         throw std::invalid_argument("matrix size does not match");
@@ -169,6 +168,7 @@ Matrix matrix_multiply_naive_tile(Matrix const &m1, Matrix const &m2, std::size_
         }
     }
     return result;
+
 }
 
 Matrix matrix_multiply_naive_cache_optimized(const Matrix &m1, const Matrix &m2) {
