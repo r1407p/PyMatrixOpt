@@ -125,6 +125,16 @@ Matrix& Matrix::operator=(const Matrix &m){
     return *this;
 }
 
+Matrix Matrix::transpose() const {
+    Matrix transposed(m_ncol, m_nrow);
+    for (size_t i = 0; i < m_nrow; ++i) {
+        for (size_t j = 0; j < m_ncol; ++j) {
+            transposed(j, i) = (*this)(i, j);
+        }
+    }
+    return transposed;
+}
+
 Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
     if(m1.ncol() != m2.nrow()){
         throw std::invalid_argument("matrix size does not match");
@@ -134,6 +144,66 @@ Matrix matrix_multiply_naive(Matrix const &m1, Matrix const &m2){
         for(size_t j = 0; j < m2.ncol(); j++){
             for(size_t k = 0; k < m1.ncol(); k++){
                 result(i, j) += m1(i, k) * m2(k, j);
+            }
+        }
+    }
+    return result;
+}
+Matrix matrix_multiply_naive_tile(Matrix const &m1, Matrix const &m2, std::size_t size){
+    if(m1.ncol() != m2.nrow()){
+        throw std::invalid_argument("matrix size does not match");
+    }
+    Matrix result(m1.nrow(), m2.ncol());
+    for(size_t i = 0; i < m1.nrow(); i += size){
+        for(size_t j = 0; j < m2.ncol(); j += size){
+            for(size_t k = 0; k < m1.ncol(); k += size){
+                for(size_t ii = i; ii < std::min(i + size, m1.nrow()); ii++){
+                    for(size_t jj = j; jj < std::min(j + size, m2.ncol()); jj++){
+                        for(size_t kk = k; kk < std::min(k + size, m1.ncol()); kk++){
+                            result(ii, jj) += m1(ii, kk) * m2(kk, jj);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+
+}
+
+Matrix matrix_multiply_naive_cache_optimized(const Matrix &m1, const Matrix &m2) {
+    if (m1.ncol() != m2.nrow()) {
+        throw std::invalid_argument("matrix size does not match");
+    }
+    Matrix m2_transposed = m2.transpose();
+    Matrix result(m1.nrow(), m2.ncol());
+    for (size_t i = 0; i < m1.nrow(); i++ ) {
+        for (size_t j = 0; j < m2_transposed.nrow(); j++) {
+            for (size_t k = 0; k < m1.ncol(); k++) {
+                result(i, j) += m1(i, k) * m2_transposed(j, k);
+            }
+        }
+    }
+    return result;
+}
+Matrix matrix_multiply_naive_cache_optimized_tile(const Matrix &m1, const Matrix &m2, size_t block_size) {
+    if (m1.ncol() != m2.nrow()) {
+        throw std::invalid_argument("matrix size does not match");
+    }
+
+    Matrix m2_transposed = m2.transpose();
+    Matrix result(m1.nrow(), m2.ncol());
+
+    for (size_t i = 0; i < m1.nrow(); i += block_size) {
+        for (size_t j = 0; j < m2_transposed.nrow(); j += block_size) {
+            for (size_t k = 0; k < m1.ncol(); k += block_size) {
+                for (size_t ii = i; ii < std::min(i + block_size, m1.nrow()); ii++) {
+                    for (size_t jj = j; jj < std::min(j + block_size, m2_transposed.nrow()); jj++) {
+                        for (size_t kk = k; kk < std::min(k + block_size, m1.ncol()); kk++) {
+                            result(ii, jj) += m1(ii, kk) * m2_transposed(jj, kk);
+                        }
+                    }
+                }
             }
         }
     }
@@ -298,7 +368,9 @@ PYBIND11_MODULE(Matrix, m) {
     .def("__eq__", &Matrix::operator ==);
 
     m.def("matrix_multiply_naive", &matrix_multiply_naive, "");
+    m.def("matrix_multiply_naive_tile", &matrix_multiply_naive_tile, "");
+    m.def("matrix_multiply_naive_cache_optimized", &matrix_multiply_naive_cache_optimized, "");
+    m.def("matrix_multiply_naive_cache_optimized_tile", &matrix_multiply_naive_cache_optimized_tile, "");
     m.def("matrix_multiply_strassen", &matrix_multiply_strassen, "");
     m.def("matrix_multiply_coppersmith_winograd", &matrix_multiply_coppersmith_winograd, "");
-
 }
