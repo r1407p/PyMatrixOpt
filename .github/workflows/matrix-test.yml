@@ -39,7 +39,7 @@ jobs:
     - name: dependency (custom)
       run: |
         export INSTALL_PREFIX=/usr
-        suudo chmod +x contrib/install.sh
+        sudo chmod +x contrib/install.sh
         sudo contrib/install.sh everything
 
     - name: Run tests
