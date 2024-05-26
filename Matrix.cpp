@@ -171,11 +171,21 @@ Matrix matrix_multiply_naive_tile(Matrix const &m1, Matrix const &m2, std::size_
     return result;
 }
 
-
-
-
-
-
+Matrix matrix_multiply_naive_cache_optimized(const Matrix &m1, const Matrix &m2) {
+    if (m1.ncol() != m2.nrow()) {
+        throw std::invalid_argument("matrix size does not match");
+    }
+    Matrix m2_transposed = m2.transpose();
+    Matrix result(m1.nrow(), m2.ncol());
+    for (size_t i = 0; i < m1.nrow(); i++ ) {
+        for (size_t j = 0; j < m2_transposed.nrow(); j++) {
+            for (size_t k = 0; k < m1.ncol(); k++) {
+                result(i, j) += m1(i, k) * m2_transposed(j, k);
+            }
+        }
+    }
+    return result;
+}
 
 
 // need to implement
@@ -337,6 +347,7 @@ PYBIND11_MODULE(Matrix, m) {
 
     m.def("matrix_multiply_naive", &matrix_multiply_naive, "");
     m.def("matrix_multiply_naive_tile", &matrix_multiply_naive_tile, "");
+    m.def("matrix_multiply_naive_cache_optimized", &matrix_multiply_naive_cache_optimized, "");
     m.def("matrix_multiply_strassen", &matrix_multiply_strassen, "");
     m.def("matrix_multiply_coppersmith_winograd", &matrix_multiply_coppersmith_winograd, "");
 }
