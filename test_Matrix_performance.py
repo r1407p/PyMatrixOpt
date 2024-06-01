@@ -66,3 +66,26 @@ for it in range(size):
                 f.write("Tile: " + str(min(tile.repeat(repeat=repeat, number=1))) + "\n")
                 f.write("Cache-optimized-tile: " + str(min(cache_optimized_tile.repeat(repeat=repeat, number=1))) + "\n")
                 f.write("\n")
+                
+    def test_multiply_thread(self):
+        for i in range(12):
+            size = 2**i
+            repeat = 1
+            setup = f'''
+import Matrix
+size = {size}
+mat1 = Matrix.Matrix(size,size)
+mat2 = Matrix.Matrix(size,size)
+for it in range(size):
+    for jt in range(size):
+        mat1[it, jt] = it * size + jt + 1
+        mat2[it, jt] = it * size + jt + 1
+'''
+            cache_optimized_tile = timeit.Timer(f'Matrix.matrix_multiply_naive_cache_optimized_tile(mat1, mat2, 4)', setup=setup)
+            multi_thread = timeit.Timer(f'Matrix.matrix_multiply_naive_cache_optimized_tile_thread(mat1, mat2, 4)', setup=setup)
+            with open("performance_thread.txt", "a") as f:
+                f.write("Size: " + str(size) + "\n")
+                f.write("Cache-optimized-tile: " + str(min(cache_optimized_tile.repeat(repeat=repeat, number=1))) + "\n")
+                f.write("Multi-thread: " + str(min(multi_thread.repeat(repeat=repeat, number=1))) + "\n")
+                f.write("\n")
+                
