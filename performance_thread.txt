@@ -1,0 +1,48 @@
+Size: 1
+Cache-optimized-tile: 3.587003448046744e-06
+Multi-thread: 0.0030521190055878833
+
+Size: 2
+Cache-optimized-tile: 5.8110017562285066e-06
+Multi-thread: 0.0020791089918930084
+
+Size: 4
+Cache-optimized-tile: 5.460999091155827e-06
+Multi-thread: 0.0035220589925302193
+
+Size: 8
+Cache-optimized-tile: 5.160007276572287e-06
+Multi-thread: 0.004013466998003423
+
+Size: 16
+Cache-optimized-tile: 1.305498881265521e-05
+Multi-thread: 0.00678682500438299
+
+Size: 32
+Cache-optimized-tile: 5.348000559024513e-05
+Multi-thread: 0.004884363996097818
+
+Size: 64
+Cache-optimized-tile: 0.00047597099910490215
+Multi-thread: 0.003256080992287025
+
+Size: 128
+Cache-optimized-tile: 0.0035687449999386445
+Multi-thread: 0.0048972010117722675
+
+Size: 256
+Cache-optimized-tile: 0.028352798995911144
+Multi-thread: 0.007199482002761215
+
+Size: 512
+Cache-optimized-tile: 0.2183916810026858
+Multi-thread: 0.03994534099183511
+
+Size: 1024
+Cache-optimized-tile: 1.8873155299952487
+Multi-thread: 0.2680737670016242
+
+Size: 2048
+Cache-optimized-tile: 14.68957342999056
+Multi-thread: 2.5758903060050216
+
